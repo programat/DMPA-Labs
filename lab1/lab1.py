@@ -1,7 +1,7 @@
 import os
 import cv2
-import numpy as np
 from enum import Enum
+from functools import wraps
 
 
 class ColorMode(Enum):
@@ -16,7 +16,19 @@ class WindowMode(Enum):
     SMALL = 2
 
 
-class ImageProcessor:
+def task(number):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            print(f"\nВыполнение задания {number}")
+            return func(self, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+class ImageVideoProcessor:
     def __init__(self, base_filename, image_extensions):
         self.base_filename = base_filename
         self.image_extensions = image_extensions
@@ -41,25 +53,7 @@ class ImageProcessor:
 
         return [f"{self.base_filename}.{ext}" for ext in self.image_extensions]
 
-    def _process_image(self, img):
-        if self.color_mode == ColorMode.NORMAL:
-            return img
-        elif self.color_mode == ColorMode.GRAYSCALE:
-            return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        elif self.color_mode == ColorMode.INVERTED:
-            return cv2.bitwise_not(img)
-
-    def _set_window_properties(self, window_name):
-        if self.window_mode == WindowMode.FULLSCREEN:
-            cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
-            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        elif self.window_mode == WindowMode.SMALL:
-            cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
-            cv2.resizeWindow(window_name, 400, 300)
-        else:  # NORMAL
-            cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
-            cv2.resizeWindow(window_name, 800, 600)
-
+    @task(2)
     def display_images(self):
         while True:
             image_path = self.image_files[self.current_image_index]
@@ -92,12 +86,105 @@ class ImageProcessor:
 
         cv2.destroyAllWindows()
 
+    @task(3)
+    def display_video(self, video_path):
+        cap = cv2.VideoCapture(video_path)
+        if not cap.isOpened():
+            print("Ошибка при открытии видео")
+            return
+
+        size_mode = 0  # 0: оригинальный, 1: уменьшенный, 2: увеличенный
+        color_mode = 0  # 0: BGR, 1: Grayscale, 2: HSV
+
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            # Обработка размера
+            if size_mode == 1:
+                frame = cv2.resize(frame, (frame.shape[1] // 2, frame.shape[0] // 2))
+            elif size_mode == 2:
+                frame = cv2.resize(frame, (int(frame.shape[1] * 1.5), int(frame.shape[0] * 1.5)))
+
+            # Обработка цвета
+            if color_mode == 1:
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            elif color_mode == 2:
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+            cv2.imshow('Video', frame)
+
+            key = cv2.waitKey(25) & 0xFF
+            if key == ord('q'):
+                break
+            elif key == ord('r'):
+                size_mode = (size_mode + 1) % 3
+                print(f"Размер: {['Оригинальный', 'Уменьшенный', 'Увеличенный'][size_mode]}")
+            elif key == ord('c'):
+                color_mode = (color_mode + 1) % 3
+                print(f"Цвет: {['BGR', 'Grayscale', 'HSV'][color_mode]}")
+
+        cap.release()
+        cv2.destroyAllWindows()
+
+    @task(4)
+    def convert_video(self, input_path, output_path):
+        pass
+
+    @task(5)
+    def display_hsv(self, image_path):
+        pass
+
+    @task(6)
+    def display_red_cross(self):
+        pass
+
+    @task(7)
+    def webcam_to_file(self):
+        pass
+
+    @task(8)
+    def color_cross(self):
+        pass
+
+    @task(9)
+    def phone_camera(self):
+        pass
+
+    # Вспомогательные методы
+    def _process_image(self, img):
+        if self.color_mode == ColorMode.NORMAL:
+            return img
+        elif self.color_mode == ColorMode.GRAYSCALE:
+            return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        elif self.color_mode == ColorMode.INVERTED:
+            return cv2.bitwise_not(img)
+
+    def _set_window_properties(self, window_name):
+        if self.window_mode == WindowMode.FULLSCREEN:
+            cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
+            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        elif self.window_mode == WindowMode.SMALL:
+            cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+            cv2.resizeWindow(window_name, 400, 300)
+        else:  # NORMAL
+            cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+            cv2.resizeWindow(window_name, 800, 600)
+
 
 def main():
-    base_filename = "zhuk"
-    image_extensions = ['jpeg', 'png', 'bmp']
-    processor = ImageProcessor(base_filename, image_extensions)
-    processor.display_images()
+    processor = ImageVideoProcessor("zhuk", ['jpeg', 'png', 'bmp'])
+
+    # выполнение заданий
+    # processor.display_images()
+    processor.display_video("marc-rebillet.mp4")
+    # processor.convert_video("input.mp4", "output.mp4")
+    # processor.display_hsv("image.jpg")
+    # processor.display_red_cross()
+    # processor.webcam_to_file()
+    # processor.color_cross()
+    # processor.phone_camera()
 
 
 if __name__ == '__main__':
