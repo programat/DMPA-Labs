@@ -62,4 +62,4 @@ python lab1.py
 
 ## Лицензия
 
-Этот проект лицензирован под MIT License - см. файл [LICENSE](LICENSE) для деталей.
+Этот проект лицензирован под MIT License - см. файл [LICENSE](../LICENSE) для деталей.

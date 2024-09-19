@@ -67,4 +67,4 @@ python lab2.py
 
 ## Лицензия
 
-Этот проект лицензирован под MIT License - см. файл [LICENSE](LICENSE) для деталей.
+Этот проект лицензирован под MIT License - см. файл [LICENSE](../LICENSE) для деталей.
