@@ -277,7 +277,7 @@ class ImageVideoProcessor:
         out = cv2.VideoWriter('output_with_cross.mp4', fourcc, fps, (width, height))
 
         start_time = time.time()
-        duration = 10  # дДлительность записи в секундах
+        duration = 10  # Длительность записи в секундах
 
         while (time.time() - start_time) < duration:
             ret, frame = cap.read()
