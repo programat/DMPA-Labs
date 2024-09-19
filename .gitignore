@@ -1,0 +1,34 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+env/
+.env
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Project specific output files
+output_with_cross.mp4
+converted_*.mp4
+converted_*.avi
+
+# Keep original video and image files
+!marc-rebillet.mp4
+!zhuk.jpeg
+!zhuk.png
+!zhuk.bmp
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Jupyter Notebook
+.ipynb_checkpoints

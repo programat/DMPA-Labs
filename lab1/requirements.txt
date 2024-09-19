@@ -1,0 +1,7 @@
+# built-in libraries
+os
+time
+
+# external libraries
+opencv-python
+numpy
